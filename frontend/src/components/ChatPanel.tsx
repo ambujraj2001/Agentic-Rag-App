@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import Markdown from "react-markdown";
 import { useChat, ChatMessage } from "../hooks/useChat";
 
 const EXAMPLE_QUESTIONS = [
@@ -39,7 +40,9 @@ function MessageBubble({ message }: { message: ChatMessage }) {
 
   return (
     <div className="chat-message chat-message-assistant">
-      <div className="chat-message-content">{message.content}</div>
+      <div className="chat-message-content">
+        <Markdown>{message.content}</Markdown>
+      </div>
 
       {message.sources && message.sources.length > 0 && (
         <div className="chat-sources-wrap">
