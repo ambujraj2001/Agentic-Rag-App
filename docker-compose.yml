@@ -1,12 +1,21 @@
-version: "3.8"
-
 services:
+  app:
+    build: .
+    restart: on-failure:3
+    ports:
+      - "3001:3001"
+    env_file:
+      - ./backend/.env
+    environment:
+      WEAVIATE_HOST: http://weaviate:8080
+      PORT: 3001
+    depends_on:
+      weaviate:
+        condition: service_healthy
+
   weaviate:
     image: cr.weaviate.io/semitechnologies/weaviate:1.27.6
     restart: on-failure:3
-    ports:
-      - "8090:8080"
-      - "50051:50051"
     volumes:
       - weaviate_data:/var/lib/weaviate
     environment:
@@ -28,6 +37,7 @@ services:
 
   t2v-transformers:
     image: cr.weaviate.io/semitechnologies/transformers-inference:sentence-transformers-multi-qa-MiniLM-L6-cos-v1
+    platform: linux/amd64
     restart: on-failure:3
     environment:
       ENABLE_CUDA: "0"
